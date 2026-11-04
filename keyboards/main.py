@@ -3,29 +3,30 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 
 def get_main_menu_keyboard(is_staff: bool = False) -> ReplyKeyboardMarkup:
     keyboard = [
-        # Asosiy harakat tugmasi - to'liq kenglikda (Yashil)
-        [KeyboardButton(text="🟢 📝 Murojaat yuborish")],
+        # Asosiy harakat tugmasi - Yashil fon (style="success"), to'liq qatorda
+        [KeyboardButton(text="📝 Murojaat yuborish", style="success")],
         
-        # 2 ta ixcham tugma - 1 qatorda chiroyli sig'adi (Ko'k va Binafsha)
+        # 2 ta qisqa tugma - Ko'k fon (style="primary")
         [
-            KeyboardButton(text="🔵 📂 Murojaatlarim"),
-            KeyboardButton(text="🟣 🔎 Holatni tekshirish")
+            KeyboardButton(text="📂 Mening murojaatlarim", style="primary"),
+            KeyboardButton(text="🔎 Holatni tekshirish", style="primary")
         ],
         
-        # To'liq kenglikdagi yozishmalar tugmasi (mobil ekranda matn buzulmaydi)
-        [KeyboardButton(text="💬 🏛 Dekanat bilan yozishmalar")],
+        # Dekanat bilan yozishmalar - Ko'k fon (style="primary"), to'liq qatorda
+        [KeyboardButton(text="💬 Dekanat bilan yozishmalar", style="primary")],
         
-        # Profil va Bog'lanish tugmalari
+        # Profil va Bog'lanish - Ko'k fon (style="primary")
         [
-            KeyboardButton(text="👤 📋 Mening profilim"),
-            KeyboardButton(text="📞 📲 Bog‘lanish")
+            KeyboardButton(text="👤 Mening profilim", style="primary"),
+            KeyboardButton(text="📞 Bog‘lanish", style="primary")
         ],
         
-        # Bot haqida
-        [KeyboardButton(text="ℹ️ 📖 Bot haqida")]
+        # Bot haqida - Odatiy/Primary
+        [KeyboardButton(text="ℹ️ Bot haqida", style="primary")]
     ]
     if is_staff:
-        keyboard.append([KeyboardButton(text="🔴 ⚡️ Boshqaruv paneli (/admin)")])
+        # Mas'ullar uchun - Qizil fon (style="danger")
+        keyboard.append([KeyboardButton(text="⚡️ Boshqaruv paneli (/admin)", style="danger")])
         
     return ReplyKeyboardMarkup(
         keyboard=keyboard,
@@ -36,7 +37,7 @@ def get_main_menu_keyboard(is_staff: bool = False) -> ReplyKeyboardMarkup:
 
 def get_cancel_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text="❌ Bekor qilish")]],
+        keyboard=[[KeyboardButton(text="❌ Bekor qilish", style="danger")]],
         resize_keyboard=True
     )
 
@@ -44,8 +45,7 @@ def get_cancel_keyboard() -> ReplyKeyboardMarkup:
 def get_back_or_cancel_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="⬅️ Orqaga"), KeyboardButton(text="❌ Bekor qilish")]
+            [KeyboardButton(text="⬅️ Orqaga", style="primary"), KeyboardButton(text="❌ Bekor qilish", style="danger")]
         ],
         resize_keyboard=True
     )
-

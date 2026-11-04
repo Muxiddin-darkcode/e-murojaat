@@ -6,39 +6,39 @@ from database.models import User, Appeal, AppealStatus, UserRole
 def get_admin_main_menu(is_super_admin: bool = False, is_dekan: bool = False) -> InlineKeyboardMarkup:
     buttons = [
         [
-            InlineKeyboardButton(text="🟢 📥 Yangi murojaatlar", callback_data="admin_nav:list:YANGI"),
-            InlineKeyboardButton(text="🔵 📂 Barcha murojaatlar", callback_data="admin_nav:list:ALL")
+            InlineKeyboardButton(text="📥 Yangi murojaatlar", callback_data="admin_nav:list:YANGI", style="success"),
+            InlineKeyboardButton(text="📂 Barcha murojaatlar", callback_data="admin_nav:list:ALL", style="primary")
         ],
         [
-            InlineKeyboardButton(text="🟡 🔄 Ko‘rib chiqilmoqda", callback_data="admin_nav:list:KORIB_CHIQILMOQDA"),
-            InlineKeyboardButton(text="⏳ 🕒 Javob kutilmoqda", callback_data="admin_nav:list:PENDING_RESPONSE")
+            InlineKeyboardButton(text="🔄 Ko‘rib chiqilayotganlar", callback_data="admin_nav:list:KORIB_CHIQILMOQDA", style="primary"),
+            InlineKeyboardButton(text="⏳ Javob kutilayotganlar", callback_data="admin_nav:list:PENDING_RESPONSE", style="primary")
         ],
         [
-            InlineKeyboardButton(text="🟢 ✅ Hal qilinganlar", callback_data="admin_nav:list:HAL_QILINDI"),
-            InlineKeyboardButton(text="🔴 ❌ Rad etilganlar", callback_data="admin_nav:list:RAD_ETILDI")
+            InlineKeyboardButton(text="✅ Hal qilinganlar", callback_data="admin_nav:list:HAL_QILINDI", style="success"),
+            InlineKeyboardButton(text="❌ Rad etilganlar", callback_data="admin_nav:list:RAD_ETILDI", style="danger")
         ],
         [
-            InlineKeyboardButton(text="🟣 🔎 Murojaat qidirish", callback_data="admin_nav:search"),
-            InlineKeyboardButton(text="📊 📈 Statistika va hisobot", callback_data="admin_nav:statistics")
+            InlineKeyboardButton(text="🔎 Murojaatni qidirish", callback_data="admin_nav:search", style="primary"),
+            InlineKeyboardButton(text="📊 Statistika va hisobotlar", callback_data="admin_nav:statistics", style="primary")
         ]
     ]
 
     # Staff management
     if is_super_admin or is_dekan:
         buttons.append([
-            InlineKeyboardButton(text="👥 👤 Xodimlarni boshqarish", callback_data="admin_nav:staff"),
-            InlineKeyboardButton(text="📢 📣 Xabar yuborish", callback_data="admin_nav:broadcast")
+            InlineKeyboardButton(text="👥 Xodimlarni boshqarish", callback_data="admin_nav:staff", style="primary"),
+            InlineKeyboardButton(text="📢 Xabar yuborish", callback_data="admin_nav:broadcast", style="primary")
         ])
     else:
         buttons.append([
-            InlineKeyboardButton(text="📢 📣 Xabar yuborish", callback_data="admin_nav:broadcast")
+            InlineKeyboardButton(text="📢 Xabar yuborish", callback_data="admin_nav:broadcast", style="primary")
         ])
 
     # Settings
     if is_super_admin:
-        buttons.append([InlineKeyboardButton(text="⚙️ 🛠 Bot sozlamalari", callback_data="admin_nav:settings")])
+        buttons.append([InlineKeyboardButton(text="⚙️ Bot sozlamalari", callback_data="admin_nav:settings", style="primary")])
 
-    buttons.append([InlineKeyboardButton(text="⬅️ 🏠 Foydalanuvchi menyusi", callback_data="admin_nav:exit")])
+    buttons.append([InlineKeyboardButton(text="⬅️ Foydalanuvchi menyusi", callback_data="admin_nav:exit", style="danger")])
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
@@ -54,38 +54,38 @@ def get_appeal_card_actions(
     # If appeal is new, allow "Ko'rib chiqishga olish"
     if appeal.status in [AppealStatus.YANGI.value, AppealStatus.ROYXATGA_OLINDI.value]:
         buttons.append([
-            InlineKeyboardButton(text="🟢 🔄 Ko‘rib chiqishga olish", callback_data=f"adm_act:take:{appeal.id}")
+            InlineKeyboardButton(text="🔄 Ko‘rib chiqishga olish", callback_data=f"adm_act:take:{appeal.id}", style="success")
         ])
 
     # Assignment button (Dekan and Admins)
     if current_user_role in [UserRole.SUPER_ADMIN.value, UserRole.DEKAN.value, UserRole.ADMINISTRATOR.value]:
-        assign_label = "👤 📋 Mas'ulni o‘zgartirish" if appeal.assigned_to_id else "👤 📋 Mas'ulga biriktirish"
+        assign_label = "👤 Mas'ulni o‘zgartirish" if appeal.assigned_to_id else "👤 Mas'ulga biriktirish"
         buttons.append([
-            InlineKeyboardButton(text=assign_label, callback_data=f"adm_act:assign:{appeal.id}")
+            InlineKeyboardButton(text=assign_label, callback_data=f"adm_act:assign:{appeal.id}", style="primary")
         ])
 
     # Response & Note
     buttons.append([
-        InlineKeyboardButton(text="🔵 📨 Javob yuborish", callback_data=f"adm_act:respond:{appeal.id}"),
-        InlineKeyboardButton(text="🟡 📝 Izoh qoldirish", callback_data=f"adm_act:note:{appeal.id}")
+        InlineKeyboardButton(text="📨 Javob yuborish", callback_data=f"adm_act:respond:{appeal.id}", style="success"),
+        InlineKeyboardButton(text="📝 Izoh qoldirish", callback_data=f"adm_act:note:{appeal.id}", style="primary")
     ])
 
     # Resolution & Rejection
     if appeal.status not in [AppealStatus.HAL_QILINDI.value, AppealStatus.RAD_ETILDI.value]:
         buttons.append([
-            InlineKeyboardButton(text="🟢 ✅ Hal qilindi", callback_data=f"adm_act:resolve:{appeal.id}"),
-            InlineKeyboardButton(text="🔴 ❌ Rad etish", callback_data=f"adm_act:reject:{appeal.id}")
+            InlineKeyboardButton(text="✅ Hal qilindi", callback_data=f"adm_act:resolve:{appeal.id}", style="success"),
+            InlineKeyboardButton(text="❌ Rad etish", callback_data=f"adm_act:reject:{appeal.id}", style="danger")
         ])
 
     # Correspondence
     buttons.append([
-        InlineKeyboardButton(text="💬 ✉️ Murojaatchi bilan yozishmalar", callback_data=f"adm_act:chat:{appeal.id}")
+        InlineKeyboardButton(text="💬 Murojaatchi bilan yozishmalar", callback_data=f"adm_act:chat:{appeal.id}", style="primary")
     ])
 
     # Back button
     buttons.append([
-        InlineKeyboardButton(text="⬅️ 📂 Ro‘yxatga qaytish", callback_data=f"admin_nav:list:{back_filter}:{back_page}"),
-        InlineKeyboardButton(text="🏠 Admin bosh menyu", callback_data="admin_nav:menu")
+        InlineKeyboardButton(text="⬅️ Ro‘yxatga qaytish", callback_data=f"admin_nav:list:{back_filter}:{back_page}", style="primary"),
+        InlineKeyboardButton(text="🏠 Admin menyu", callback_data="admin_nav:menu", style="danger")
     ])
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)

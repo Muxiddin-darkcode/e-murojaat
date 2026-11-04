@@ -59,16 +59,16 @@ def get_relationship_keyboard() -> InlineKeyboardMarkup:
 
 def get_consent_keyboard() -> InlineKeyboardMarkup:
     buttons = [
-        [InlineKeyboardButton(text="✅ Roziman va tasdiqlayman", callback_data="consent:agree")],
-        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="consent:decline")]
+        [InlineKeyboardButton(text="✅ Roziman va tasdiqlayman", callback_data="consent:agree", style="success")],
+        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="consent:decline", style="danger")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
 def get_profile_actions_keyboard() -> InlineKeyboardMarkup:
     buttons = [
-        [InlineKeyboardButton(text="✏️ Ma'lumotlarni tahrirlash", callback_data="profile:edit")],
-        [InlineKeyboardButton(text="🔄 Yangilash", callback_data="profile:refresh")]
+        [InlineKeyboardButton(text="✏️ Ma'lumotlarni tahrirlash", callback_data="profile:edit", style="primary")],
+        [InlineKeyboardButton(text="🔄 Yangilash", callback_data="profile:refresh", style="primary")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
