@@ -17,7 +17,7 @@ class TrackingState(StatesGroup):
     waiting_appeal_number = State()
 
 
-@router.message(F.text == "🔎 Murojaat holatini tekshirish")
+@router.message(F.text.contains("Holatni tekshirish") | F.text.contains("Murojaat holati"))
 async def start_tracking(message: Message, state: FSMContext):
     await state.clear()
     await message.answer(

@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 router = Router(name="correspondence_router")
 
 
-@router.message(F.text == "💬 Dekanat bilan yozishmalar")
+@router.message(F.text.contains("Dekanat bilan yozishmalar"))
 async def show_correspondence_appeals(message: Message, state: FSMContext, session: AsyncSession):
     await state.clear()
     user = await get_or_create_user(session, message.from_user.id)

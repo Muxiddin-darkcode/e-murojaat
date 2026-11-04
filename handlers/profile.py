@@ -43,7 +43,7 @@ def format_user_profile(user: User) -> str:
     return text
 
 
-@router.message(F.text == "👤 Mening profilim")
+@router.message(F.text.contains("Mening profilim"))
 async def show_profile(message: Message, session: AsyncSession):
     user = await get_or_create_user(session, message.from_user.id)
     if not user.is_registered:

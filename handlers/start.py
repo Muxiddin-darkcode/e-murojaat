@@ -79,7 +79,7 @@ async def process_cancel(message: Message, state: FSMContext, session: AsyncSess
     )
 
 
-@router.message(F.text == "📞 Bog‘lanish")
+@router.message(F.text.contains("Bog‘lanish") | F.text.contains("Bog'lanish"))
 async def process_contact(message: Message, session: AsyncSession):
     dept_name = await get_setting(session, "department_name", "Aniq va tabiiy fanlar fakulteti")
     inst_name = await get_setting(session, "institute_name", "Guliston davlat pedagogika instituti")
@@ -100,7 +100,7 @@ async def process_contact(message: Message, session: AsyncSession):
     await message.answer(text, parse_mode="HTML")
 
 
-@router.message(F.text == "ℹ️ Bot haqida")
+@router.message(F.text.contains("Bot haqida"))
 async def process_about(message: Message, session: AsyncSession):
     dept_name = await get_setting(session, "department_name", "Aniq fanlar kafedrasi")
     text = (

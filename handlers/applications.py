@@ -8,7 +8,7 @@ from sqlalchemy import select
 
 from database.models import (
     User, Appeal, AppealFile, AppealStatus, AppealType, 
-    AppealStatusHistory, AppealTopic
+    AppealStatusHistory, AppealTopic, UserRole
 )
 from database.queries import (
     get_or_create_user, get_active_topics, get_appeal_by_id
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 router = Router(name="applications_router")
 
 
-@router.message(F.text == "📝 Murojaat yuborish")
+@router.message(F.text.contains("Murojaat yuborish"))
 async def start_appeal_submission(message: Message, state: FSMContext, session: AsyncSession):
     await state.clear()
     user = await get_or_create_user(session, message.from_user.id)

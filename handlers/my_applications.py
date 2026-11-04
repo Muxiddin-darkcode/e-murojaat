@@ -17,7 +17,7 @@ router = Router(name="my_applications_router")
 PAGE_LIMIT = 5
 
 
-@router.message(F.text == "📂 Mening murojaatlarim")
+@router.message(F.text.contains("Murojaatlarim"))
 async def show_my_appeals(message: Message, session: AsyncSession):
     user = await get_or_create_user(session, message.from_user.id)
     if not user.is_registered:

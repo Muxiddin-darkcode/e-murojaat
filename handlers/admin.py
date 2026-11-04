@@ -22,7 +22,7 @@ router = Router(name="admin_main_router")
 
 
 @router.message(Command("admin"))
-@router.message(F.text == "⚡️ Boshqaruv paneli (/admin)")
+@router.message(F.text.contains("Boshqaruv paneli"))
 async def cmd_admin(message: Message, state: FSMContext, session: AsyncSession):
     await state.clear()
     tg_id = message.from_user.id

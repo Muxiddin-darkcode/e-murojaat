@@ -3,13 +3,29 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 
 def get_main_menu_keyboard(is_staff: bool = False) -> ReplyKeyboardMarkup:
     keyboard = [
-        [KeyboardButton(text="📝 Murojaat yuborish"), KeyboardButton(text="📂 Mening murojaatlarim")],
-        [KeyboardButton(text="🔎 Murojaat holatini tekshirish"), KeyboardButton(text="💬 Dekanat bilan yozishmalar")],
-        [KeyboardButton(text="👤 Mening profilim"), KeyboardButton(text="📞 Bog‘lanish")],
-        [KeyboardButton(text="ℹ️ Bot haqida")]
+        # Asosiy harakat tugmasi - to'liq kenglikda (Yashil)
+        [KeyboardButton(text="🟢 📝 Murojaat yuborish")],
+        
+        # 2 ta ixcham tugma - 1 qatorda chiroyli sig'adi (Ko'k va Binafsha)
+        [
+            KeyboardButton(text="🔵 📂 Murojaatlarim"),
+            KeyboardButton(text="🟣 🔎 Holatni tekshirish")
+        ],
+        
+        # To'liq kenglikdagi yozishmalar tugmasi (mobil ekranda matn buzulmaydi)
+        [KeyboardButton(text="💬 🏛 Dekanat bilan yozishmalar")],
+        
+        # Profil va Bog'lanish tugmalari
+        [
+            KeyboardButton(text="👤 📋 Mening profilim"),
+            KeyboardButton(text="📞 📲 Bog‘lanish")
+        ],
+        
+        # Bot haqida
+        [KeyboardButton(text="ℹ️ 📖 Bot haqida")]
     ]
     if is_staff:
-        keyboard.append([KeyboardButton(text="⚡️ Boshqaruv paneli (/admin)")])
+        keyboard.append([KeyboardButton(text="🔴 ⚡️ Boshqaruv paneli (/admin)")])
         
     return ReplyKeyboardMarkup(
         keyboard=keyboard,
