@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     )
     REDIS_URL: Optional[str] = Field(default=None, description="Redis URL for FSM and caching")
     SUPER_ADMIN_ID: int = Field(default=0, description="Telegram ID of Super Administrator")
+    DEKAN_ID: int = Field(default=0, description="Telegram ID of Dekan")
     TIMEZONE: str = Field(default="Asia/Tashkent", description="Timezone name")
     APP_ENV: str = Field(default="production", description="Application environment: development / production")
     LOG_LEVEL: str = Field(default="INFO", description="Log level")
@@ -29,3 +30,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+

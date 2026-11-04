@@ -1,13 +1,14 @@
 import logging
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models import User
+from database.models import User, UserRole
 from database.queries import (
     get_or_create_user, get_user_appeals_paginated, get_appeal_by_id
 )
 from keyboards.staff import get_user_appeals_pagination, get_user_appeal_detail_keyboard
+from keyboards.main import get_main_menu_keyboard
 from services.application_service import format_appeal_detail_view
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,12 @@ async def show_my_appeals(message: Message, session: AsyncSession):
     if not appeals:
         await message.answer("Sizda hali yuborilgan murojaatlar mavjud emas. Yangi murojaat yuborish uchun '📝 Murojaat yuborish' tugmasini bosing.")
         return
+
+    try:
+        temp = await message.answer("📂", reply_markup=ReplyKeyboardRemove())
+        await temp.delete()
+    except Exception:
+        pass
 
     kb = get_user_appeals_pagination(appeals, current_page=1, total_count=total, limit=PAGE_LIMIT)
     await message.answer(
@@ -90,6 +97,18 @@ async def view_user_appeal_detail(callback: CallbackQuery, session: AsyncSession
 
 
 @router.callback_query(F.data == "user_app_close")
-async def close_user_appeals_view(callback: CallbackQuery):
+async def close_user_appeals_view(callback: CallbackQuery, session: AsyncSession):
+    user = await get_or_create_user(session, callback.from_user.id)
+    is_staff = user.role in [
+        UserRole.SUPER_ADMIN.value,
+        UserRole.DEKAN.value,
+        UserRole.ADMINISTRATOR.value,
+        UserRole.MASUL_XODIM.value
+    ]
     await callback.message.delete()
+    await callback.message.answer(
+        "Asosiy menyudasiz.",
+        reply_markup=get_main_menu_keyboard(is_staff=is_staff)
+    )
     await callback.answer()
+

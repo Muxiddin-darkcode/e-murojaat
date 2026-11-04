@@ -43,3 +43,4 @@ class AdminSettingsState(StatesGroup):
 
 class CorrespondenceState(StatesGroup):
     waiting_message = State()
+

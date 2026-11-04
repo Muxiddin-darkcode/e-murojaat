@@ -1,6 +1,6 @@
 import logging
 from aiogram import Router, F, Bot
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
@@ -10,6 +10,7 @@ from database.queries import (
     get_or_create_user, get_appeal_by_id, add_correspondence_message,
     get_user_appeals_paginated
 )
+from keyboards.main import get_main_menu_keyboard
 from states.admin import CorrespondenceState
 from utils.helpers import format_datetime, validate_file
 
@@ -29,6 +30,12 @@ async def show_correspondence_appeals(message: Message, state: FSMContext, sessi
     if not appeals:
         await message.answer("Sizda hali murojaatlar mavjud emas. Avval '📝 Murojaat yuborish' orqali murojaat yo‘llang.")
         return
+
+    try:
+        temp = await message.answer("💬", reply_markup=ReplyKeyboardRemove())
+        await temp.delete()
+    except Exception:
+        pass
 
     buttons = []
     for app in appeals:
@@ -148,8 +155,15 @@ async def process_user_chat_message(message: Message, state: FSMContext, session
     )
 
     await state.clear()
+    is_staff = user.role in [
+        UserRole.SUPER_ADMIN.value,
+        UserRole.DEKAN.value,
+        UserRole.ADMINISTRATOR.value,
+        UserRole.MASUL_XODIM.value
+    ]
     await message.answer(
         f"✅ <b>Xabaringiz {appeal.appeal_number} raqamli murojaat bo‘yicha dekanatga yetkazildi!</b>",
+        reply_markup=get_main_menu_keyboard(is_staff=is_staff),
         parse_mode="HTML"
     )
 
@@ -175,3 +189,4 @@ async def process_user_chat_message(message: Message, state: FSMContext, session
                     await bot.send_photo(target.telegram_id, photo=file_id)
         except Exception as e:
             logger.warning(f"Could not forward correspondence message to staff {target.telegram_id}: {e}")
+

@@ -81,20 +81,21 @@ async def process_cancel(message: Message, state: FSMContext, session: AsyncSess
 
 @router.message(F.text == "📞 Bog‘lanish")
 async def process_contact(message: Message, session: AsyncSession):
-    dept_name = await get_setting(session, "department_name", "Aniq fanlar kafedrasi")
-    inst_name = await get_setting(session, "institute_name", "Institut")
-    phone = await get_setting(session, "contact_phone", "+998 71 200 00 00")
-    telegram = await get_setting(session, "official_telegram", "@aniq_fanlar")
-    dekan = await get_setting(session, "dekan_name", "Dekan")
+    dept_name = await get_setting(session, "department_name", "Aniq va tabiiy fanlar fakulteti")
+    inst_name = await get_setting(session, "institute_name", "Guliston davlat pedagogika instituti")
+    phone = await get_setting(session, "contact_phone", "+998 97 277-21-78")
+    email = await get_setting(session, "contact_email", "baxtiyor.abdullaev.78@mail.ru")
+    hours = await get_setting(session, "reception_hours", "Har kun: 09:00-17:00")
+    dekan = await get_setting(session, "dekan_name", "Baxtiyor Abdullaev")
 
     text = (
         f"📞 <b>BOG‘LANISH VA ALOQA MA'LUMOTLARI</b>\n\n"
         f"🏛 <b>Muassasa:</b> {inst_name}\n"
-        f"📚 <b>Kafedra:</b> {dept_name}\n"
-        f"👤 <b>Kafedra mudiri / Mas'ul:</b> {dekan}\n"
+        f"📚 <b>Fakultet:</b> {dept_name}\n"
+        f"👤 <b>Fakultet dekani:</b> {dekan}\n"
         f"📞 <b>Telefon:</b> {phone}\n"
-        f"✈️ <b>Rasmiy Telegram:</b> {telegram}\n\n"
-        f"<i>Ish vaqti: Dushanba – Shanba, 09:00 dan 18:00 gacha.</i>"
+        f"✉️ <b>Elektron pochta:</b> {email}\n"
+        f"🕒 <b>Qabul kunlari:</b> {hours}\n"
     )
     await message.answer(text, parse_mode="HTML")
 
@@ -114,3 +115,4 @@ async def process_about(message: Message, session: AsyncSession):
         f"<i>Versiya: 2.0 (2026)\nAniq fanlar kafedrasi axborot xizmati.</i>"
     )
     await message.answer(text, parse_mode="HTML")
+

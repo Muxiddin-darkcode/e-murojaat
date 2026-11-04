@@ -9,3 +9,4 @@ class AppealSubmissionState(StatesGroup):
     uploading_files = State()         # Step 5: Fayl biriktirish
     choosing_confidentiality = State()# Step 6: Maxfiylik (Oddiy / Maxfiy)
     confirming = State()              # Step 7: Yakuniy tasdiqlash
+

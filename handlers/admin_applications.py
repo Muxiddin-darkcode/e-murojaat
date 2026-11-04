@@ -528,3 +528,4 @@ async def process_admin_search(message: Message, state: FSMContext, session: Asy
         parse_mode="HTML"
     )
     await state.clear()
+

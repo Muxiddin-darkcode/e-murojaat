@@ -52,3 +52,4 @@ def get_submission_confirm_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="app_cancel")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+

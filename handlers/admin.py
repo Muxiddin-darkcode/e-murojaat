@@ -1,6 +1,6 @@
 import logging
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -37,6 +37,13 @@ async def cmd_admin(message: Message, state: FSMContext, session: AsyncSession):
     if not (is_super or is_dekan or is_admin or is_staff):
         await message.answer("❌ Ushbu bo‘lim faqat Aniq fanlar kafedrasi mas'ul xodimlari va administratorlar uchun ochiq!")
         return
+
+    # Close bottom reply keyboard when admin inline panel opens
+    try:
+        temp = await message.answer("⚡️", reply_markup=ReplyKeyboardRemove())
+        await temp.delete()
+    except Exception:
+        pass
 
     # If user is only a Mas'ul Xodim (responsible staff), show their dedicated dashboard
     if is_staff and not (is_super or is_dekan or is_admin):
@@ -125,3 +132,4 @@ async def nav_exit_admin(callback: CallbackQuery, session: AsyncSession):
         reply_markup=get_main_menu_keyboard(is_staff=is_staff)
     )
     await callback.answer()
+

@@ -30,3 +30,4 @@ RUN chmod -R 755 /app
 
 # Run bot
 CMD ["python", "bot.py"]
+

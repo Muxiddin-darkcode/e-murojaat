@@ -1,7 +1,7 @@
 import logging
 from typing import List, Dict, Any
 from aiogram import Router, F, Bot
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -52,6 +52,12 @@ async def start_appeal_submission(message: Message, state: FSMContext, session: 
         return
 
     # Step 1: Appeal Type
+    try:
+        temp = await message.answer("📝", reply_markup=ReplyKeyboardRemove())
+        await temp.delete()
+    except Exception:
+        pass
+
     await message.answer(
         "📝 <b>1-bosqich: Murojaat turini tanlang:</b>",
         reply_markup=get_appeal_types_keyboard(),
@@ -64,7 +70,17 @@ async def start_appeal_submission(message: Message, state: FSMContext, session: 
 async def cancel_submission(callback: CallbackQuery, state: FSMContext, session: AsyncSession):
     await state.clear()
     user = await get_or_create_user(session, callback.from_user.id)
-    await callback.message.edit_text("❌ Murojaat yuborish bekor qilindi.")
+    is_staff = user.role in [
+        UserRole.SUPER_ADMIN.value,
+        UserRole.DEKAN.value,
+        UserRole.ADMINISTRATOR.value,
+        UserRole.MASUL_XODIM.value
+    ]
+    await callback.message.delete()
+    await callback.message.answer(
+        "❌ Murojaat yuborish bekor qilindi.",
+        reply_markup=get_main_menu_keyboard(is_staff=is_staff)
+    )
     await callback.answer()
 
 
@@ -338,11 +354,22 @@ async def submit_appeal_final(callback: CallbackQuery, state: FSMContext, sessio
         "Murojaatingiz uchun rahmat!"
     )
 
+    is_staff = user.role in [
+        UserRole.SUPER_ADMIN.value,
+        UserRole.DEKAN.value,
+        UserRole.ADMINISTRATOR.value,
+        UserRole.MASUL_XODIM.value
+    ]
     await callback.message.delete()
-    await callback.message.answer(success_text, parse_mode="HTML")
+    await callback.message.answer(
+        success_text,
+        reply_markup=get_main_menu_keyboard(is_staff=is_staff),
+        parse_mode="HTML"
+    )
     await callback.answer()
 
     # Refresh appeal with relationships and notify admins
     refreshed_appeal = await get_appeal_by_id(session, appeal.id)
     if refreshed_appeal:
         await notify_new_appeal(bot=bot, session=session, appeal=refreshed_appeal)
+

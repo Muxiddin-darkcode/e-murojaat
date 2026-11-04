@@ -165,3 +165,4 @@ async def generate_appeals_excel_report(session: AsyncSession) -> str:
 
     wb.save(file_path)
     return file_path
+

@@ -33,3 +33,4 @@ class RegistrationState(StatesGroup):
 class ProfileEditState(StatesGroup):
     choosing_field = State()
     waiting_value = State()
+

@@ -427,3 +427,4 @@ async def get_dashboard_statistics(
         "shikoyatlar": shikoyat_count,
         "takliflar": taklif_count,
     }
+

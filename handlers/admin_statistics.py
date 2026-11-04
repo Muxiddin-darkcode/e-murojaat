@@ -159,3 +159,4 @@ async def execute_broadcast(callback: CallbackQuery, state: FSMContext, session:
         parse_mode="HTML"
     )
     await callback.answer()
+

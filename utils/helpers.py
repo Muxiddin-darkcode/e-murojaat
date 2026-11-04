@@ -115,3 +115,4 @@ async def set_setting(session: AsyncSession, key: str, value: str) -> None:
     else:
         session.add(SystemSetting(key=key, value=value))
     await session.commit()
+

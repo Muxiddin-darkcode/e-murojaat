@@ -199,3 +199,4 @@ def get_settings_menu() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="🏠 Admin menyu", callback_data="admin_nav:menu")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+

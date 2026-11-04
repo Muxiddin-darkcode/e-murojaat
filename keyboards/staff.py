@@ -85,3 +85,4 @@ def get_staff_assigned_keyboard(
 
     buttons.append([InlineKeyboardButton(text="🏠 Asosiy menyu", callback_data="staff_close")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+

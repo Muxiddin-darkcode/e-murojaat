@@ -256,3 +256,4 @@ async def remove_staff_confirm(callback: CallbackQuery, session: AsyncSession):
     await callback.answer("Xodim vakolati bekor qilindi!", show_alert=True)
     # Return to staff list
     await show_staff_management(callback, session)
+

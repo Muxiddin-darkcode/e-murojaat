@@ -61,3 +61,4 @@ async def process_tracking_query(message: Message, state: FSMContext, session: A
     text = format_appeal_detail_view(appeal, is_staff=is_staff, viewer_role=user.role)
     await message.answer(text, parse_mode="HTML")
     await state.clear()
+

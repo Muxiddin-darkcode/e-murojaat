@@ -64,10 +64,12 @@ async def init_db() -> None:
 
             # 2. Seed System Settings
             default_settings = {
-                "dekan_name": "F.I.Sh. (Aniq fanlar kafedrasi rahbari)",
-                "institute_name": "Oliy ta'lim muassasasi",
-                "department_name": "Aniq fanlar kafedrasi",
-                "contact_phone": "+998 71 200 00 00",
+                "dekan_name": "Baxtiyor Abdullaev",
+                "institute_name": "Guliston davlat pedagogika instituti",
+                "department_name": "Aniq va tabiiy fanlar fakulteti",
+                "contact_phone": "+998 97 277-21-78",
+                "contact_email": "baxtiyor.abdullaev.78@mail.ru",
+                "reception_hours": "Har kun: 09:00-17:00",
                 "official_telegram": "@aniq_fanlar_kafedrasi",
                 "default_deadline_days": "10",
                 "min_content_length": "20",
@@ -77,8 +79,12 @@ async def init_db() -> None:
             
             for key, val in default_settings.items():
                 setting_res = await session.execute(select(SystemSetting).where(SystemSetting.key == key))
-                if not setting_res.scalar_one_or_none():
+                existing_setting = setting_res.scalar_one_or_none()
+                if not existing_setting:
                     session.add(SystemSetting(key=key, value=val))
+                elif key in ["dekan_name", "department_name", "contact_phone", "contact_email", "reception_hours"]:
+                    # Keep synced with exact details
+                    existing_setting.value = val
             
             # 3. Seed Super Admin
             if settings.SUPER_ADMIN_ID and settings.SUPER_ADMIN_ID > 0:
@@ -102,9 +108,36 @@ async def init_db() -> None:
                     admin_user.role = UserRole.SUPER_ADMIN.value
                     logger.info(f"Upgraded user {settings.SUPER_ADMIN_ID} to Super Admin role.")
 
+            # 4. Seed Dekan
+            if settings.DEKAN_ID and settings.DEKAN_ID > 0:
+                dekan_res = await session.execute(
+                    select(User).where(User.telegram_id == settings.DEKAN_ID)
+                )
+                dekan_user = dekan_res.scalar_one_or_none()
+                if not dekan_user:
+                    dekan_user = User(
+                        telegram_id=settings.DEKAN_ID,
+                        full_name="Baxtiyor Abdullaev",
+                        phone="+998972772178",
+                        user_type="XODIM",
+                        role=UserRole.DEKAN.value,
+                        staff_position="Aniq va Tabiiy fanlar fakulteti dekani",
+                        is_active=True,
+                        is_registered=True
+                    )
+                    session.add(dekan_user)
+                    logger.info(f"Created Dekan with Telegram ID: {settings.DEKAN_ID}")
+                else:
+                    dekan_user.role = UserRole.DEKAN.value
+                    dekan_user.staff_position = "Aniq va Tabiiy fanlar fakulteti dekani"
+                    dekan_user.full_name = "Baxtiyor Abdullaev"
+                    dekan_user.phone = "+998972772178"
+                    logger.info(f"Upgraded user {settings.DEKAN_ID} to Dekan role.")
+
             await session.commit()
             logger.info("Database initialized successfully.")
         except Exception as e:
             await session.rollback()
             logger.error(f"Error during database initialization: {e}", exc_info=True)
             raise
+

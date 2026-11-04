@@ -3,11 +3,11 @@ import os
 import sys
 from datetime import datetime, timezone, timedelta
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from database.database import init_db, AsyncSessionLocal, engine
 from database.models import (
     Base, User, UserType, UserRole, Appeal, AppealFile, 
-    AppealStatus, AppealStatusHistory, CorrespondenceMessage, SystemSetting
+    AppealStatus, AppealStatusHistory, CorrespondenceMessage, SystemSetting, AppealTopic
 )
 from database.queries import (
     get_or_create_user, get_appeal_by_id, get_appeal_by_number,
@@ -25,11 +25,43 @@ async def run_tests():
     print("  E-MUROJAAT TIZIMINI TESTLASH VA TEKSHIRISH")
     print("==================================================")
 
+    test_db_path = "data/test_e_murojaat.db"
+    if os.path.exists(test_db_path):
+        try:
+            os.remove(test_db_path)
+        except Exception:
+            pass
+
+    test_engine = create_async_engine(f"sqlite+aiosqlite:///{test_db_path}")
+    TestSessionLocal = async_sessionmaker(bind=test_engine, class_=AsyncSession, expire_on_commit=False)
+
     # 1. Test DB Init
     print("\n[1] Baza initsializatsiyasi va standart ma'lumotlar...")
-    await init_db()
-    
-    async with AsyncSessionLocal() as session:
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    async with TestSessionLocal() as session:
+        # Seed settings
+        default_settings = {
+            "dekan_name": "Baxtiyor Abdullaev",
+            "institute_name": "Guliston davlat pedagogika instituti",
+            "department_name": "Aniq va tabiiy fanlar fakulteti",
+            "contact_phone": "+998 97 277-21-78",
+            "contact_email": "baxtiyor.abdullaev.78@mail.ru",
+            "reception_hours": "Har kun: 09:00-17:00",
+            "official_telegram": "@aniq_fanlar_kafedrasi",
+            "default_deadline_days": "10",
+            "min_content_length": "20",
+            "max_content_length": "3000",
+            "appeals_enabled": "true"
+        }
+        for k, v in default_settings.items():
+            session.add(SystemSetting(key=k, value=v))
+        
+        session.add(AppealTopic(name="Ta'lim jarayoni", is_active=True))
+        session.add(AppealTopic(name="Imtihon va baholash", is_active=True))
+        await session.commit()
+
         # Check settings
         res = await session.execute(select(SystemSetting))
         settings_rows = res.scalars().all()
@@ -55,11 +87,11 @@ async def run_tests():
         citizen.is_registered = True
 
         # Staff (Dekan)
-        dekan = await get_or_create_user(session, tg_id=333333, full_name="Prof. Rahimov Akram Rustamovich")
+        dekan = await get_or_create_user(session, tg_id=333333, full_name="Baxtiyor Abdullaev")
         dekan.role = UserRole.DEKAN.value
         dekan.user_type = UserType.XODIM.value
-        dekan.staff_position = "Aniq fanlar kafedrasi mudiri"
-        dekan.phone = "+998901112233"
+        dekan.staff_position = "Aniq va Tabiiy fanlar fakulteti dekani"
+        dekan.phone = "+998972772178"
         dekan.is_registered = True
 
         # Staff (O'qituvchi / Mas'ul xodim)
@@ -214,6 +246,13 @@ async def run_tests():
         file_size = os.path.getsize(excel_path)
         assert file_size > 1000, f"Excel fayl hajmi juda kichik: {file_size} bayt"
         print(f" -> OK: Excel hisoboti shakllantirildi: {excel_path} ({file_size} bayt).")
+
+    await test_engine.dispose()
+    if os.path.exists(test_db_path):
+        try:
+            os.remove(test_db_path)
+        except Exception:
+            pass
 
     print("\n==================================================")
     print("  BARCHA TESTLAR MUVAFFAQIYATLI O'TDI! (100% OK)")

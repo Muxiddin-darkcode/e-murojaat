@@ -20,3 +20,4 @@ class DatabaseMiddleware(BaseMiddleware):
             except Exception:
                 await session.rollback()
                 raise
+

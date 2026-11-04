@@ -258,3 +258,4 @@ Eng ishonchli va tavsiya etiladigan usul. Birgina buyruq bilan PostgreSQL 16, Re
 
 ---
 **E-MUROJAAT** — Aniq fanlar kafedrasining ishonchli, shaffof va zamonaviy elektron ko‘prigi!
+

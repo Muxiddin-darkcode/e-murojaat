@@ -33,3 +33,4 @@ async def generate_appeal_number(session: AsyncSession) -> str:
 
     # Do not commit here, it commits with the appeal creation
     return f"AF-{current_year}-{current_num:06d}"
+

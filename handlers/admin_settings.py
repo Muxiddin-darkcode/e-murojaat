@@ -226,3 +226,4 @@ async def perform_database_backup(callback: CallbackQuery, bot: Bot):
         )
     else:
         await callback.message.answer("⚠️ PostgreSQL bazasi uchun zaxira nusxasi avtomatik pg_dump orqali serverda yuritiladi.")
+

@@ -164,3 +164,4 @@ async def notify_official_response(
         )
     except Exception as e:
         logger.warning(f"Could not send official response to {applicant.telegram_id}: {e}")
+
