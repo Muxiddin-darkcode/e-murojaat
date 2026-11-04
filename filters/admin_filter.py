@@ -67,13 +67,4 @@ class IsDekanFilter(BaseFilter):
         if not row or not row[1]:
             return False
         return row[0] in [UserRole.SUPER_ADMIN.value, UserRole.DEKAN.value]
-        tg_id = event.from_user.id
-        if settings.SUPER_ADMIN_ID and tg_id == settings.SUPER_ADMIN_ID:
-            return True
-        stmt = select(User.role, User.is_active).where(User.telegram_id == tg_id)
-        res = await session.execute(stmt)
-        row = res.first()
-        if not row or not row[1]:
-            return False
-        return row[0] in [UserRole.SUPER_ADMIN.value, UserRole.DEKAN.value]
 

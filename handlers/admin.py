@@ -30,7 +30,7 @@ async def cmd_admin(message: Message, state: FSMContext, session: AsyncSession):
 
     # Permission check
     is_super = (settings.SUPER_ADMIN_ID and tg_id == settings.SUPER_ADMIN_ID) or user.role == UserRole.SUPER_ADMIN.value
-    is_dekan = user.role == UserRole.DEKAN.value
+    is_dekan = (settings.DEKAN_ID and tg_id == settings.DEKAN_ID) or user.role == UserRole.DEKAN.value
     is_admin = user.role == UserRole.ADMINISTRATOR.value
     is_staff = user.role == UserRole.MASUL_XODIM.value
 
@@ -91,7 +91,7 @@ async def nav_to_admin_menu(callback: CallbackQuery, state: FSMContext, session:
     user = await get_or_create_user(session, tg_id)
 
     is_super = (settings.SUPER_ADMIN_ID and tg_id == settings.SUPER_ADMIN_ID) or user.role == UserRole.SUPER_ADMIN.value
-    is_dekan = user.role == UserRole.DEKAN.value
+    is_dekan = (settings.DEKAN_ID and tg_id == settings.DEKAN_ID) or user.role == UserRole.DEKAN.value
 
     stats = await get_dashboard_statistics(session)
     role_label = UserRole.label(user.role)

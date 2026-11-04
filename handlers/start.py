@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
+from config import settings
 from database.models import User, UserRole, SystemSetting
 from database.queries import get_or_create_user
 from keyboards.main import get_main_menu_keyboard
@@ -42,14 +43,21 @@ async def cmd_start(message: Message, state: FSMContext, session: AsyncSession):
         full_name=tg_user.full_name or "Foydalanuvchi"
     )
 
-    is_staff = user.role in [
-        UserRole.SUPER_ADMIN.value,
-        UserRole.DEKAN.value,
-        UserRole.ADMINISTRATOR.value,
-        UserRole.MASUL_XODIM.value
-    ]
+    is_super = (settings.SUPER_ADMIN_ID and tg_user.id == settings.SUPER_ADMIN_ID) or user.role == UserRole.SUPER_ADMIN.value
+    is_dekan = (settings.DEKAN_ID and tg_user.id == settings.DEKAN_ID) or user.role == UserRole.DEKAN.value
+    is_admin = user.role == UserRole.ADMINISTRATOR.value
+    is_staff = user.role == UserRole.MASUL_XODIM.value
 
-    # If user is not yet registered, prompt for registration
+    is_any_staff = is_super or is_dekan or is_admin or is_staff
+
+    # Bot adminlari / dekan / mas'ullar uchun to'g'ridan-to'g'ri Admin panel ochiladi
+    if is_any_staff:
+        from handlers.admin import cmd_admin
+        await cmd_admin(message, state, session)
+        return
+
+    # Qolgan oddiy foydalanuvchilar uchun esa oddiy murojaat oynasi
+    # Agar foydalanuvchi hali ro'yxatdan o'tmagan bo'lsa, ro'yxatdan o'tish taklif qilinadi
     if not user.is_registered:
         reg_intro = (
             f"{WELCOME_TEXT}\n\n"
@@ -60,10 +68,10 @@ async def cmd_start(message: Message, state: FSMContext, session: AsyncSession):
         await state.set_state(RegistrationState.choosing_user_type)
         return
 
-    # User is registered, show main menu
+    # Ro'yxatdan o'tgan oddiy foydalanuvchiga oddiy murojaat bosh menyusi ko'rsatiladi
     await message.answer(
         WELCOME_TEXT,
-        reply_markup=get_main_menu_keyboard(is_staff=is_staff),
+        reply_markup=get_main_menu_keyboard(is_staff=False),
         parse_mode="HTML"
     )
 
