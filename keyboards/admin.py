@@ -190,7 +190,7 @@ def get_statistics_menu() -> InlineKeyboardMarkup:
 def get_settings_menu() -> InlineKeyboardMarkup:
     buttons = [
         [InlineKeyboardButton(text="🏛 Institut nomi", callback_data="set_edit:institute_name")],
-        [InlineKeyboardButton(text="📚 Kafedra nomi", callback_data="set_edit:department_name")],
+        [InlineKeyboardButton(text="📚 Fakultet nomi", callback_data="set_edit:department_name")],
         [InlineKeyboardButton(text="👤 Dekan F.I.Sh.", callback_data="set_edit:dekan_name")],
         [InlineKeyboardButton(text="📞 Aloqa telefoni", callback_data="set_edit:contact_phone")],
         [InlineKeyboardButton(text="✈️ Rasmiy Telegram", callback_data="set_edit:official_telegram")],

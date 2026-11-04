@@ -99,7 +99,7 @@ async def process_appeal_type(callback: CallbackQuery, state: FSMContext, sessio
 
     await callback.message.edit_text(
         f"Murojaat turi: <b>{AppealType.label(app_type)}</b>\n\n"
-        "🏛 <b>2-bosqich: Aniq fanlar kafedrasining tegishli yo‘nalishini tanlang:</b>",
+        "🏛 <b>2-bosqich: Fakultetning tegishli yo‘nalishini tanlang:</b>",
         reply_markup=get_topics_keyboard(topics),
         parse_mode="HTML"
     )
@@ -121,7 +121,7 @@ async def process_topic(callback: CallbackQuery, state: FSMContext, session: Asy
 
     await state.update_data(topic_id=topic.id, topic_name=topic.name)
     await callback.message.edit_text(
-        f"Kafedra yo‘nalishi: <b>{topic.name}</b>\n\n"
+        f"Fakultet yo‘nalishi: <b>{topic.name}</b>\n\n"
         "📌 <b>3-bosqich: Murojaat uchun qisqa sarlavha (mavzu) kiriting:</b>\n"
         "<i>(Masalan: Yakuniy nazorat natijalari bo‘yicha ariza)</i>",
         parse_mode="HTML"
@@ -243,7 +243,7 @@ async def process_file_action(callback: CallbackQuery, state: FSMContext):
     # Move to Step 6: Confidentiality
     await callback.message.edit_text(
         "🔒 <b>6-bosqich: Maxfiylik turini tanlang:</b>\n\n"
-        "• <b>Oddiy murojaat:</b> Kafedra dekani va barcha vakolatli administratorlar tomonidan ko‘rib chiqiladi.\n"
+        "• <b>Oddiy murojaat:</b> Fakultet dekani va barcha vakolatli administratorlar tomonidan ko‘rib chiqiladi.\n"
         "• <b>Maxfiy murojaat:</b> Faqat institut dekani va bosh administratorga yetkaziladi (qolgan xodimlar ko‘ra olmaydi).",
         reply_markup=get_confidentiality_keyboard(),
         parse_mode="HTML"
@@ -299,7 +299,7 @@ async def submit_appeal_final(callback: CallbackQuery, state: FSMContext, sessio
         appeal_number=appeal_number,
         applicant_id=user.id,
         appeal_type=data.get("appeal_type", "ARIZA"),
-        topic_name=data.get("topic_name", "Kafedra faoliyati"),
+        topic_name=data.get("topic_name", "Fakultet faoliyati"),
         title=data.get("title", "Murojaat"),
         description=data.get("description", ""),
         is_confidential=data.get("is_confidential", False),
@@ -349,7 +349,7 @@ async def submit_appeal_final(callback: CallbackQuery, state: FSMContext, sessio
     success_text = (
         "✅ <b>Murojaatingiz muvaffaqiyatli qabul qilindi!</b>\n\n"
         f"<b>Murojaat raqami:</b> <code>{appeal_number}</code>\n\n"
-        "Murojaatingiz Aniq fanlar kafedrasi mas'ullariga yetkazildi.\n\n"
+        "Murojaatingiz Aniq va tabiiy fanlar fakulteti mas'ullariga yetkazildi.\n\n"
         "Murojaatingiz holatini bot orqali istalgan vaqtda kuzatishingiz mumkin.\n\n"
         "Murojaatingiz uchun rahmat!"
     )

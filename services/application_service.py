@@ -16,7 +16,7 @@ def format_appeal_confirmation(data: Dict[str, Any]) -> str:
     text = (
         "📋 <b>MUROJAATNI YAKUNIY TEKSHIRISH VA TASDIQLASH</b>\n\n"
         f"<b>Murojaat turi:</b> {app_type_label}\n"
-        f"<b>Kafedra yo‘nalishi:</b> {topic_name}\n"
+        f"<b>Fakultet yo‘nalishi:</b> {topic_name}\n"
         f"<b>Mavzu:</b> {title}\n\n"
         f"<b>Murojaat matni:</b>\n{description}\n\n"
         f"<b>Maxfiylik turi:</b> {confidential}\n"

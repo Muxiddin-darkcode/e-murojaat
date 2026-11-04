@@ -41,8 +41,8 @@ async def show_settings_main(callback: CallbackQuery, session: AsyncSession):
     text = (
         "⚙️ <b>BOTNING ASOSIY SOZLAMALARI</b>\n\n"
         f"🏛 <b>Institut:</b> {inst}\n"
-        f"📚 <b>Kafedra:</b> {dept}\n"
-        f"👤 <b>Dekan / Mudir:</b> {dekan}\n"
+        f"📚 <b>Fakultet:</b> {dept}\n"
+        f"👤 <b>Fakultet dekani:</b> {dekan}\n"
         f"📞 <b>Aloqa telefoni:</b> {phone}\n"
         f"✈️ <b>Rasmiy Telegram:</b> {tg}\n"
         f"⏱ <b>Standart ijro muddati:</b> {deadline} kun\n"
@@ -52,7 +52,7 @@ async def show_settings_main(callback: CallbackQuery, session: AsyncSession):
 
     buttons = [
         [InlineKeyboardButton(text="🏛 Institut nomi", callback_data="set_edit:institute_name")],
-        [InlineKeyboardButton(text="📚 Kafedra nomi", callback_data="set_edit:department_name")],
+        [InlineKeyboardButton(text="📚 Fakultet nomi", callback_data="set_edit:department_name")],
         [InlineKeyboardButton(text="👤 Dekan F.I.Sh.", callback_data="set_edit:dekan_name")],
         [InlineKeyboardButton(text="📞 Aloqa telefoni", callback_data="set_edit:contact_phone")],
         [InlineKeyboardButton(text="✈️ Rasmiy Telegram", callback_data="set_edit:official_telegram")],
@@ -74,8 +74,8 @@ async def edit_setting_param(callback: CallbackQuery, state: FSMContext, session
 
     param_labels = {
         "institute_name": "Institutning rasmiy nomi",
-        "department_name": "Kafedraning rasmiy nomi",
-        "dekan_name": "Dekan (Kafedra rahbari) F.I.Sh.",
+        "department_name": "Fakultetning rasmiy nomi",
+        "dekan_name": "Fakultet dekani F.I.Sh.",
         "contact_phone": "Aloqa telefon raqami",
         "official_telegram": "Rasmiy Telegram username",
         "default_deadline_days": "Standart ko‘rib chiqish muddati (kun)"
@@ -143,7 +143,7 @@ async def manage_topics(callback: CallbackQuery, session: AsyncSession):
 
     buttons = []
     text_lines = [
-        "🗂 <b>MUROJAAT YO‘NALISHLARI (KAFEDRA BO‘YICHA)</b>\n",
+        "🗂 <b>MUROJAAT YO‘NALISHLARI (FAKULTET BO‘YICHA)</b>\n",
         "Yo‘nalishni yoqish / o‘chirish uchun uning ustiga bosing:\n"
     ]
 

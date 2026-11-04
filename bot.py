@@ -61,7 +61,7 @@ async def setup_bot_commands(bot: Bot):
 async def main():
     setup_logging()
     logger = logging.getLogger("e_murojaat")
-    logger.info("Starting E-MUROJAAT Telegram Bot for Aniq fanlar kafedrasi...")
+    logger.info("Starting E-MUROJAAT Telegram Bot for Aniq va tabiiy fanlar fakulteti...")
 
     if not settings.BOT_TOKEN or settings.BOT_TOKEN.startswith("7777777777"):
         logger.warning(

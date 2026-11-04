@@ -54,7 +54,7 @@ async def init_db() -> None:
                     "O‘qituvchilar faoliyati",
                     "Talabalar bilan ishlash",
                     "Ilmiy va akademik faoliyat",
-                    "Kafedra faoliyati",
+                    "Fakultet va kafedralar faoliyati",
                     "Hujjatlar va ma'lumotnomalar",
                     "Boshqa masalalar"
                 ]

@@ -1,7 +1,7 @@
 # 🏛 E-MUROJAAT
-## ANIQ FANLAR KAFEDRASI UCHUN PROFESSIONAL ELEKTRON MUROJAATLAR TELEGRAM BOTI
+## ANIQ VA TABIIY FANLAR FAKULTETI UCHUN PROFESSIONAL ELEKTRON MUROJAATLAR TELEGRAM BOTI
 
-Professional, xavfsiz va to‘liq avtomatlashtirilgan elektron murojaatlar axborot tizimi. Ushbu tizim faqatgina **Telegram Bot** ichida ishlaydi — hech qanday tashqi veb dashboard yoki alohida sayt talab etilmaydi. Kafedra dekani va barcha mas'ul administratorlar o‘z vakolatlari doirasida barcha jarayonlarni Telegram bot orqali to‘liq boshqaradilar.
+Professional, xavfsiz va to‘liq avtomatlashtirilgan elektron murojaatlar axborot tizimi. Ushbu tizim faqatgina **Telegram Bot** ichida ishlaydi — hech qanday tashqi veb dashboard yoki alohida sayt talab etilmaydi. Fakultet dekani va barcha mas'ul administratorlar o‘z vakolatlari doirasida barcha jarayonlarni Telegram bot orqali to‘liq boshqaradilar.
 
 ---
 
@@ -11,10 +11,10 @@ Professional, xavfsiz va to‘liq avtomatlashtirilgan elektron murojaatlar axbor
    - Web kabinet, dashboard yoki uchinchi tomon dasturlariga ehtiyoj yo‘q.
    - Foydalanuvchilar va dekanat o‘rtasidagi barcha operatsiyalar (qabul qilish, biriktirish, javob yuborish, statistika) 100% Telegram ichida amalga oshiriladi.
 2. **Noyob Murojaat Raqamlash Tizimi**:
-   - Har bir murojaatga takrorlanmas `AF-2026-000001` formatidagi raqam avtomatik biriktiriladi (`AF` — Aniq fanlar kafedrasi, joriy yil va 6 xonali ketma-ketlik).
+   - Har bir murojaatga takrorlanmas `AF-2026-000001` formatidagi raqam avtomatik biriktiriladi (`AF` — Aniq va tabiiy fanlar fakulteti, joriy yil va 6 xonali ketma-ketlik).
    - Race-condition va dublikatlardan tranzaksion darajada himoyalangan.
 3. **Bosqichma-bosqich FSM Murojaat Yuborish**:
-   - 7 bosqichli qat'iy nazorat: Murojaat turi ➡️ Kafedra yo‘nalishi ➡️ Mavzu ➡️ Mazmuni ➡️ Fayllar (PDF, DOCX, JPG va boshqalar) ➡️ Maxfiylik ➡️ Yakuniy tasdiqlash.
+   - 7 bosqichli qat'iy nazorat: Murojaat turi ➡️ Fakultet yo‘nalishi ➡️ Mavzu ➡️ Mazmuni ➡️ Fayllar (PDF, DOCX, JPG va boshqalar) ➡️ Maxfiylik ➡️ Yakuniy tasdiqlash.
 4. **Qat'iy Rolli Xavfsizlik (RBAC)**:
    - `👑 SUPER ADMINISTRATOR`: Barcha boshqaruv, xodimlar, sozlamalar, hisobotlar.
    - `🏛 DEKAN`: Barcha oddiy va maxfiy murojaatlar, xodimlarga topshiriq biriktirish, rasmiy javob berish, monitoring.
@@ -29,8 +29,8 @@ Professional, xavfsiz va to‘liq avtomatlashtirilgan elektron murojaatlar axbor
 7. **Haqiqiy Ma'lumotlarga Asoslangan Statistika va Excel Eksport**:
    - Kunlik, haftalik, oylik va umumiy hisobotlar.
    - To‘liq formatlangan, jadvalli va chiroyli `.xlsx` Excel hisobotini Telegram orqali bir tugma bilan yuklab olish (openpyxl asosida).
-8. **Kafedra Sozlamalarini Bot Ichidan Boshqarish**:
-   - Kafedra nomi, Institut nomi, Dekan F.I.Sh., aloqa raqamlari, yo‘nalishlar va standart ijro muddatlarini bevosita botdan tahrirlash.
+8. **Fakultet Sozlamalarini Bot Ichidan Boshqarish**:
+   - Fakultet nomi, Institut nomi, Dekan F.I.Sh., aloqa raqamlari, yo‘nalishlar va standart ijro muddatlarini bevosita botdan tahrirlash.
 9. **Kiberxavfsizlik va Audit**:
    - SQL Injectiondan himoyalangan SQLAlchemy 2.0 Async ORM.
    - Barcha muhim amallarni (yaratish, status o‘zgarishi, javob yuborish, sozlamalar) qayd etuvchi `AuditLog` tizimi.
@@ -198,7 +198,7 @@ Eng ishonchli va tavsiya etiladigan usul. Birgina buyruq bilan PostgreSQL 16, Re
 3. Quyidagi konfiguratsiyani kiriting:
    ```ini
    [Unit]
-   Description=E-Murojaat Telegram Bot (Aniq fanlar kafedrasi)
+   Description=E-Murojaat Telegram Bot (Aniq va tabiiy fanlar fakulteti)
    After=network.target
 
    [Service]
@@ -237,7 +237,7 @@ Eng ishonchli va tavsiya etiladigan usul. Birgina buyruq bilan PostgreSQL 16, Re
 1. **📥 Yangi murojaatlar**: Kelib tushgan murojaatlar ro‘yxati. Har bir murojaat ostida:
    - `👁 Batafsil ko‘rish`
    - `🔄 Ko‘rib chiqishga olish`
-   - `👤 Mas'ulga biriktirish` (Kafedra xodimini tanlash, ijro muddati va topshiriq izohini kiritish)
+   - `👤 Mas'ulga biriktirish` (Fakultet mas'ul xodimini tanlash, ijro muddati va topshiriq izohini kiritish)
    - `📨 Javob yuborish` (Rasmiy javob yozish — javob darhol murojaatchi Telegramiga yetkaziladi)
    - `📝 Izoh qoldirish` (Ichki xizmat yozishmasi)
    - `✅ Hal qilindi`
@@ -245,7 +245,7 @@ Eng ishonchli va tavsiya etiladigan usul. Birgina buyruq bilan PostgreSQL 16, Re
 2. **👥 Xodimlarni boshqarish**: Yangi xodim qo‘shish (Telegram ID orqali), ularga Dekan, Administrator yoki Mas'ul xodim rollarini biriktirish, lavozimini belgilash yoki vakolatini bekor qilish.
 3. **📊 Statistika va hisobotlar**: Kunlik, haftalik, oylik va umumiy ko‘rsatkichlar. Excel formatida `.xlsx` hisobotni bot orqali to‘g‘ridan-to‘g‘ri yuklab olish.
 4. **📢 Xabar yuborish**: Bot foydalanuvchilariga umumiy e'lon va rasmiy xabarlarni tarqatish.
-5. **⚙️ Bot sozlamalari**: Kafedra nomi, Dekan F.I.Sh., aloqa raqamlari, yo‘nalishlar va standart muddatlarni to‘g‘ridan-to‘g‘ri Telegram orqali o‘zgartirish hamda ma'lumotlar bazasi zaxirasini (Backup) olish.
+5. **⚙️ Bot sozlamalari**: Fakultet nomi, Dekan F.I.Sh., aloqa raqamlari, yo‘nalishlar va standart muddatlarni to‘g‘ridan-to‘g‘ri Telegram orqali o‘zgartirish hamda ma'lumotlar bazasi zaxirasini (Backup) olish.
 
 ---
 
@@ -276,5 +276,5 @@ Buning oldini olish uchun bot tarkibiga maxsus **asinxron Keep-Alive HTTP veb-se
 - SQL Injection, fayl kengaytmasi va hajmi cheklovlari to‘liq joriy etilgan.
 
 ---
-**E-MUROJAAT** — Aniq fanlar kafedrasining ishonchli, shaffof va zamonaviy elektron ko‘prigi!
+**E-MUROJAAT** — Aniq va tabiiy fanlar fakultetining ishonchli, shaffof va zamonaviy elektron ko‘prigi!
 

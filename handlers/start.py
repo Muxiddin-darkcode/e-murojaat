@@ -20,13 +20,13 @@ router = Router(name="start_router")
 
 WELCOME_TEXT = """Assalomu alaykum!
 
-ANİQ FANLAR KAFEDRASINING elektron murojaatlar Telegram botiga xush kelibsiz!
+ANIQ VA TABIIY FANLAR FAKULTETINING elektron murojaatlar Telegram botiga xush kelibsiz!
 
-Ushbu bot orqali Siz kafedra faoliyatiga oid ariza, shikoyat, taklif va savollaringizni yuborishingiz mumkin.
+Ushbu bot orqali Siz fakultet faoliyatiga oid ariza, shikoyat, taklif va savollaringizni yuborishingiz mumkin.
 
 Har bir murojaatingiz maxsus raqam bilan ro‘yxatga olinadi va vakolatli mas'ullar tomonidan ko‘rib chiqiladi.
 
-Murojaatingiz holatini kuzatish va dekanat bilan elektron muloqot qilish imkoniyati ham mavjud.
+Murojaatingiz holatini kuzatish va fakultet dekanati bilan elektron muloqot qilish imkoniyati ham mavjud.
 
 Marhamat, kerakli bo‘limni tanlang."""
 
@@ -110,7 +110,7 @@ async def process_contact(message: Message, session: AsyncSession):
 
 @router.message(F.text.contains("Bot haqida"))
 async def process_about(message: Message, session: AsyncSession):
-    dept_name = await get_setting(session, "department_name", "Aniq fanlar kafedrasi")
+    dept_name = await get_setting(session, "department_name", "Aniq va tabiiy fanlar fakulteti")
     text = (
         f"ℹ️ <b>BOT HAQIDA</b>\n\n"
         f"<b>E-MUROJAAT</b> — {dept_name} uchun mo‘ljallangan professional elektron murojaatlar axborot tizimi.\n\n"
@@ -118,9 +118,9 @@ async def process_about(message: Message, session: AsyncSession):
         f"• Ariza, shikoyat, taklif va savollarni onlayn yuborish\n"
         f"• Har bir murojaatga noyob raqam berish va monitoring qilish\n"
         f"• Ko‘rib chiqish muddatlari va mas'ullar ijrosini nazorat qilish\n"
-        f"• Kafedra dekanati bilan to‘g‘ridan-to‘g‘ri elektron yozishmalar\n"
+        f"• Fakultet dekanati bilan to‘g‘ridan-to‘g‘ri elektron yozishmalar\n"
         f"• Shaxsiy ma'lumotlar va maxfiy murojaatlarning qat'iy xavfsizligi\n\n"
-        f"<i>Versiya: 2.0 (2026)\nAniq fanlar kafedrasi axborot xizmati.</i>"
+        f"<i>Versiya: 2.0 (2026)\nAniq va tabiiy fanlar fakulteti axborot xizmati.</i>"
     )
     await message.answer(text, parse_mode="HTML")
 

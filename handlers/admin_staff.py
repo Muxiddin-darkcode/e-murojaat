@@ -28,7 +28,7 @@ async def show_staff_management(callback: CallbackQuery, session: AsyncSession):
     staff_list = await get_all_staff_members(session)
 
     text_lines = [
-        "👥 <b>KAFEDRA XODIMLARI VA MAS'ULLARINI BOSHQARISH</b>\n",
+        "👥 <b>FAKULTET XODIMLARI VA MAS'ULLARINI BOSHQARISH</b>\n",
         f"Jami xodimlar: <b>{len(staff_list)} nafar</b>\n"
     ]
 
@@ -138,7 +138,7 @@ async def add_staff_step5_role(callback: CallbackQuery, state: FSMContext):
     await state.update_data(new_staff_role=role)
     await callback.message.edit_text(
         f"Rol: <b>{UserRole.label(role)}</b>\n\n"
-        "Xodimning lavozimini kiriting (Masalan: Kafedra mudiri, Katta o‘qituvchi, Dotsent, Kafedra assistenti):",
+        "Xodimning lavozimini kiriting (Masalan: Dekan o‘rinbosari, Kafedra mudiri, Dotsent, Katta o‘qituvchi):",
         parse_mode="HTML"
     )
     await state.set_state(AdminStaffManageState.waiting_position)
@@ -150,7 +150,7 @@ async def add_staff_step6_finish(message: Message, state: FSMContext, session: A
     position = message.text.strip()
     data = await state.get_data()
     tg_id = data.get("new_staff_tg_id")
-    full_name = data.get("new_staff_full_name", "Kafedra xodimi")
+    full_name = data.get("new_staff_full_name", "Fakultet xodimi")
     phone = data.get("new_staff_phone", "+998000000000")
     role = data.get("new_staff_role", UserRole.MASUL_XODIM.value)
 
@@ -205,7 +205,7 @@ async def add_staff_step6_finish(message: Message, state: FSMContext, session: A
                 chat_id=tg_id,
                 text=(
                     f"🎉 <b>Hurmatli {full_name}!</b>\n\n"
-                    f"Sizga <b>Aniq fanlar kafedrasi</b> elektron murojaatlar axborot tizimida xodimlik vakolati berildi:\n"
+                    f"Sizga <b>Aniq va tabiiy fanlar fakulteti</b> elektron murojaatlar axborot tizimida xodimlik vakolati berildi:\n"
                     f"• <b>Rol:</b> {UserRole.label(role)}\n"
                     f"• <b>Lavozim:</b> {position}\n\n"
                     f"Tizimga kirish uchun /start yoki /admin buyrug‘ini bosing."

@@ -248,7 +248,7 @@ async def assign_staff_step4_finalize(message: Message, state: FSMContext, sessi
 
     # Notify staff & applicant
     await notify_staff_assignment(bot, session, appeal, target_staff, current_user)
-    await notify_status_change(bot, session, appeal, AppealStatus.BIRIKTIRILDI.value, comment=f"Murojaat kafedra mas'ul xodimi {target_staff.full_name}ga biriktirildi.")
+    await notify_status_change(bot, session, appeal, AppealStatus.BIRIKTIRILDI.value, comment=f"Murojaat fakultet mas'ul xodimi {target_staff.full_name}ga biriktirildi.")
 
     detail_text = format_appeal_detail_view(appeal, is_staff=True, viewer_role=current_user.role)
     kb = get_appeal_card_actions(appeal, current_user_role=current_user.role)
@@ -436,7 +436,7 @@ async def add_internal_note_start(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(
         "📝 <b>ICHKI XIZMAT IZOHI QOLDIRISH</b>\n\n"
         "Xizmat izohini kiriting:\n"
-        "<i>(Ushbu izoh faqat kafedra xodimlari va dekanatga ko‘rinadi, murojaatchiga KO‘RSATILMAYDI)</i>\n\n"
+        "<i>(Ushbu izoh faqat fakultet xodimlari va dekanatga ko‘rinadi, murojaatchiga KO‘RSATILMAYDI)</i>\n\n"
         "Bekor qilish uchun '❌ Bekor qilish' deb yozing.",
         parse_mode="HTML"
     )
