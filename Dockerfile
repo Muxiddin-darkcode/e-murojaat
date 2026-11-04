@@ -28,6 +28,9 @@ RUN mkdir -p data logs data/reports data/backups
 # Set permissions
 RUN chmod -R 755 /app
 
+# Expose HTTP port for UptimeRobot health-checks
+EXPOSE 8080
+
 # Run bot
 CMD ["python", "bot.py"]
 

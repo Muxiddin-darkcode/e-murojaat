@@ -22,6 +22,13 @@ class Settings(BaseSettings):
         description="Allowed file extensions"
     )
 
+    # Web server & UptimeRobot keep-alive settings
+    ENABLE_WEB_SERVER: bool = Field(default=True, description="Enable HTTP server for UptimeRobot")
+    WEB_HOST: str = Field(default="0.0.0.0", description="Web host to bind to")
+    WEB_PORT: int = Field(default=8080, description="Web port for health checks and UptimeRobot")
+    SELF_PING_URL: Optional[str] = Field(default=None, description="Optional public URL to self-ping")
+    SELF_PING_INTERVAL_MINUTES: int = Field(default=10, description="Self-ping interval in minutes")
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

@@ -249,6 +249,25 @@ Eng ishonchli va tavsiya etiladigan usul. Birgina buyruq bilan PostgreSQL 16, Re
 
 ---
 
+### 🌐 UPTIMEROBOT ORQALI 24/7 UXLATMASDAN ISHLATISH (RENDER, KOYEB, RAILWAY)
+
+Render, Koyeb yoki boshqa bepul serverlarda botlar 15 daqiqa faoliyatsizlikdan keyin "uxlab qolishi" (sleep mode) mumkin.
+Buning oldini olish uchun bot tarkibiga maxsus **asinxron Keep-Alive HTTP veb-serveri** kiritilgan:
+- Standart port: `8080` (yoki bulutli server bergan `$PORT` muhit o‘zgaruvchisi avtomatik olinadi).
+- Manzillar: `/`, `/health` va `/ping` (barcha so‘rovlarga `200 OK` qaytaradi).
+
+#### UptimeRobot orqali sozlash yo‘riqnomasi:
+1. [UptimeRobot.com](https://uptimerobot.com) saytidan bepul ro‘yxatdan o‘ting.
+2. **Add New Monitor** tugmasini bosing:
+   - **Monitor Type:** `HTTP(s)`
+   - **Friendly Name:** `E-Murojaat Bot`
+   - **URL (or IP):** `https://sizning-botingiz.onrender.com/` (yoki `/health`)
+   - **Monitoring Interval:** `5 minutes` (har 5 daqiqada so‘rov yuborib botni doim uyg‘oq saqlaydi)
+3. **Create Monitor** tugmasini bosing.
+   Tizim har 5 daqiqada serveringizga so‘rov yuborib, uning 24/7 uzluksiz ishlashini kafolatlaydi!
+
+---
+
 ### 🛡 XAVFSIZLIK VA AUDIT
 
 - Tizimda barcha harakatlar `audit_logs` jadvalida xavfsiz qayd etiladi.

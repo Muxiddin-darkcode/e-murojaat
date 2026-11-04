@@ -122,6 +122,25 @@ async def main():
     except Exception as e:
         logger.warning(f"Could not setup bot commands: {e}")
 
+    # Start Keep-Alive Web Server for UptimeRobot
+    web_runner = None
+    self_ping_task = None
+    if settings.ENABLE_WEB_SERVER:
+        try:
+            from services.web_server import start_web_server, run_self_ping
+            port = int(os.environ.get("PORT", settings.WEB_PORT))
+            host = os.environ.get("HOST", settings.WEB_HOST)
+            web_runner = await start_web_server(host=host, port=port)
+            logger.info(f"Health-check web server for UptimeRobot started on http://{host}:{port}")
+
+            if settings.SELF_PING_URL:
+                self_ping_task = asyncio.create_task(
+                    run_self_ping(settings.SELF_PING_URL, settings.SELF_PING_INTERVAL_MINUTES)
+                )
+                logger.info(f"Self-ping background task started for {settings.SELF_PING_URL}")
+        except Exception as e:
+            logger.warning(f"Could not start UptimeRobot web server: {e}")
+
     logger.info("Bot is ready and listening for updates...")
 
     try:
@@ -130,6 +149,10 @@ async def main():
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
     finally:
         logger.info("Shutting down bot...")
+        if self_ping_task and not self_ping_task.done():
+            self_ping_task.cancel()
+        if web_runner:
+            await web_runner.cleanup()
         await bot.session.close()
         await engine.dispose()
         logger.info("Shutdown completed.")

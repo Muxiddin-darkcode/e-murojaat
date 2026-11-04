@@ -247,6 +247,24 @@ async def run_tests():
         assert file_size > 1000, f"Excel fayl hajmi juda kichik: {file_size} bayt"
         print(f" -> OK: Excel hisoboti shakllantirildi: {excel_path} ({file_size} bayt).")
 
+    # 11. Test UptimeRobot Keep-Alive Web Server
+    print("\n[11] UptimeRobot Keep-Alive veb-serverini tekshirish...")
+    from aiohttp.test_utils import TestClient, TestServer
+    from services.web_server import create_web_app
+
+    web_app = create_web_app()
+    test_client = TestClient(TestServer(web_app))
+    await test_client.start_server()
+
+    resp = await test_client.get('/')
+    assert resp.status == 200, f"GET / status: {resp.status}"
+    resp_health = await test_client.get('/health')
+    assert resp_health.status == 200, f"GET /health status: {resp_health.status}"
+    health_json = await resp_health.json()
+    assert health_json.get("status") == "healthy"
+    await test_client.close()
+    print(" -> OK: UptimeRobot veb-serveri 200 OK qaytarmoqda (GET / va GET /health).")
+
     await test_engine.dispose()
     if os.path.exists(test_db_path):
         try:
