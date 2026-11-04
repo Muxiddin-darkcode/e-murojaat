@@ -149,58 +149,89 @@ async def add_staff_step5_role(callback: CallbackQuery, state: FSMContext):
 async def add_staff_step6_finish(message: Message, state: FSMContext, session: AsyncSession):
     position = message.text.strip()
     data = await state.get_data()
-    tg_id = data["new_staff_tg_id"]
-    full_name = data["new_staff_full_name"]
+    tg_id = data.get("new_staff_tg_id")
+    full_name = data.get("new_staff_full_name", "Kafedra xodimi")
     phone = data.get("new_staff_phone", "+998000000000")
-    role = data["new_staff_role"]
+    role = data.get("new_staff_role", UserRole.MASUL_XODIM.value)
+
+    if not tg_id:
+        await message.answer("Xatolik: Xodim Telegram ID topilmadi. Boshidan urinib ko'ring.")
+        await state.clear()
+        return
 
     current_user = await get_or_create_user(session, message.from_user.id)
 
-    # Check if user already in DB
-    user = await (await session.execute(select(User).where(User.telegram_id == tg_id))).scalar_one_or_none()
-    if user:
-        user.role = role
-        user.staff_position = position
-        user.is_active = True
-    else:
-        user = User(
-            telegram_id=tg_id,
-            full_name=full_name,
-            phone=phone,
-            role=role,
-            staff_position=position,
-            user_type="XODIM",
-            is_active=True,
-            is_registered=True
+    try:
+        # Check if user already in DB
+        res = await session.execute(select(User).where(User.telegram_id == tg_id))
+        user = res.scalar_one_or_none()
+        if user:
+            user.role = role
+            user.staff_position = position
+            user.is_active = True
+            if full_name and user.full_name in ["Foydalanuvchi", "", None]:
+                user.full_name = full_name
+            if phone and (not user.phone or user.phone == "+998000000000"):
+                user.phone = phone
+        else:
+            user = User(
+                telegram_id=tg_id,
+                full_name=full_name,
+                phone=phone,
+                role=role,
+                staff_position=position,
+                user_type="XODIM",
+                is_active=True,
+                is_registered=True
+            )
+            session.add(user)
+
+        await log_audit(
+            session=session,
+            user_id=current_user.id,
+            telegram_id=current_user.telegram_id,
+            action="ADD_STAFF",
+            target_type="User",
+            target_id=str(tg_id),
+            details=f"Xodim tayinlandi: {full_name}, rol: {role}, lavozim: {position}"
         )
-        session.add(user)
 
-    await log_audit(
-        session=session,
-        user_id=current_user.id,
-        telegram_id=current_user.telegram_id,
-        action="ADD_STAFF",
-        target_type="User",
-        target_id=str(tg_id),
-        details=f"Xodim tayinlandi: {full_name}, rol: {role}, lavozim: {position}"
-    )
+        await session.commit()
+        await state.clear()
 
-    await session.commit()
-    await state.clear()
+        # Send notification to the newly appointed staff member if possible
+        try:
+            await message.bot.send_message(
+                chat_id=tg_id,
+                text=(
+                    f"🎉 <b>Hurmatli {full_name}!</b>\n\n"
+                    f"Sizga <b>Aniq fanlar kafedrasi</b> elektron murojaatlar axborot tizimida xodimlik vakolati berildi:\n"
+                    f"• <b>Rol:</b> {UserRole.label(role)}\n"
+                    f"• <b>Lavozim:</b> {position}\n\n"
+                    f"Tizimga kirish uchun /start yoki /admin buyrug‘ini bosing."
+                ),
+                parse_mode="HTML"
+            )
+        except Exception:
+            pass
 
-    buttons = [
-        [InlineKeyboardButton(text="👥 Xodimlar ro‘yxati", callback_data="admin_nav:staff")],
-        [InlineKeyboardButton(text="🏠 Admin menyu", callback_data="admin_nav:menu")]
-    ]
-    await message.answer(
-        f"✅ <b>Xodim muvaffaqiyatli tayinlandi!</b>\n\n"
-        f"<b>F.I.Sh:</b> {full_name}\n"
-        f"<b>Rol:</b> {UserRole.label(role)}\n"
-        f"<b>Lavozim:</b> {position}\n"
-        f"<b>Telegram ID:</b> <code>{tg_id}</code>",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons),
-        parse_mode="HTML"
-    )
+        buttons = [
+            [InlineKeyboardButton(text="👥 Xodimlar ro‘yxati", callback_data="admin_nav:staff")],
+            [InlineKeyboardButton(text="🏠 Admin menyu", callback_data="admin_nav:menu")]
+        ]
+        await message.answer(
+            f"✅ <b>Xodim muvaffaqiyatli tayinlandi!</b>\n\n"
+            f"<b>F.I.Sh:</b> {full_name}\n"
+            f"<b>Rol:</b> {UserRole.label(role)}\n"
+            f"<b>Lavozim:</b> {position}\n"
+            f"<b>Telegram ID:</b> <code>{tg_id}</code>",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons),
+            parse_mode="HTML"
+        )
+    except Exception as e:
+        logger.error(f"Error while adding staff: {e}", exc_info=True)
+        await session.rollback()
+        await message.answer(f"❌ Xodimni saqlashda xatolik yuz berdi: {e}")
 
 
 @router.callback_query(F.data.startswith("staff_edit:"))
